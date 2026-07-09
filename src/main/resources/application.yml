@@ -1,0 +1,19 @@
+logging:
+  level:
+    org.apache.coyote.http11.Http11InputBuffer: DEBUG
+    com.zaxxer.hikari: DEBUG
+spring:
+  application:
+    name: OnlineOrder
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL:localhost}:5432/onlineorder
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: SNAKE_CASE
+  sql:
+    init:
+      mode: ${INIT_DB:always}
+      schema-locations: "classpath:database-init.sql"
