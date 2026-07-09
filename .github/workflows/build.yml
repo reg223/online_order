@@ -15,8 +15,8 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_DB: onlineorder       
-          POSTGRES_USER: ${DATABASE_USERNAME:postgres}   
-          POSTGRES_PASSWORD: ${DATABASE_PASSWORD:admin} 
+          POSTGRES_USER: postgres 
+          POSTGRES_PASSWORD: admin
         ports:
           - 5432:5432
         # Wait until postgres is healthy before running the build
