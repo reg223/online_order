@@ -10,6 +10,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: onlineorder       
+          POSTGRES_USER: ${DATABASE_USERNAME:postgres}   
+          POSTGRES_PASSWORD: ${DATABASE_PASSWORD:admin} 
+        ports:
+          - 5432:5432
+        # Wait until postgres is healthy before running the build
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -30,4 +46,6 @@ jobs:
       run: chmod +x ./gradlew
 
     - name: Build and Test with Gradle
+      env:
+        DATABASE_URL: localhost
       run: ./gradlew build
