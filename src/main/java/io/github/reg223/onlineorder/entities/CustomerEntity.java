@@ -9,6 +9,6 @@ public record CustomerEntity(
         String email,
         String password,
         boolean enabled,
-        String FirstName,
-        String LastName
+        String firstName,
+        String lastName
 ) { }

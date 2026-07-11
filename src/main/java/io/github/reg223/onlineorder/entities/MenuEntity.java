@@ -3,12 +3,13 @@ package io.github.reg223.onlineorder.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("order_items")
-public record OrderEntity(
+@Table("menu_items")
+public record MenuEntity(
         @Id Long id,
-        Long menuId,
-        Long cartId,
+        Long shopId,
+        String name,
         Double price,
-        Integer quantity
+        String description,
+        String imageUrl
 ) {
 }

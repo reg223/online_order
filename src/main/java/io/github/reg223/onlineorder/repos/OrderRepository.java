@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderRepository extends ListCrudRepository<OrderEntity, Long> {
     List<OrderEntity> findByCartId(Long cartId);
-    OrderEntity findByCartidAndMenuId(Long cartId ,Long orderId);
+    OrderEntity findByCartIdAndMenuItemId(Long cartId ,Long orderId);
 
     @Modifying
     @Query("DELETE FROM order_items WHERE cart_id = :cartID")
