@@ -1,7 +1,9 @@
 logging:
   level:
     org.apache.coyote.http11.Http11InputBuffer: DEBUG
-    com.zaxxer.hikari: DEBUG
+    org.springframework.jdbc.core: DEBUG
+
+#    com.zaxxer.hikari: DEBUG
 spring:
   application:
     name: OnlineOrder
