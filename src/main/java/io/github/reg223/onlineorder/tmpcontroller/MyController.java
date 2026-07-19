@@ -1,4 +1,4 @@
-package io.github.reg223.onlineorder.controller;
+package io.github.reg223.onlineorder.tmpcontroller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
