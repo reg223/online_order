@@ -21,9 +21,9 @@ public class AppConfig {
     UserDetailsManager users(DataSource dataSource) {
         JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
         userDetailsManager.setCreateUserSql("INSERT INTO customers (email, password, enabled) VALUES (?, ?, ?)");
-        userDetailsManager.setCreateAuthoritySql("INSERT INTO authorities(email, authority) VALUES (?, ?)");
+        userDetailsManager.setCreateAuthoritySql("INSERT INTO authorities (email, authority) VALUES (?, ?)");
         userDetailsManager.setUsersByUsernameQuery("SELECT email, password, enabled FROM customers WHERE email = ?");
-        userDetailsManager.setAuthoritiesByUsernameQuery("SELECT email, authority FROM customers WHERE email = ?");
+        userDetailsManager.setAuthoritiesByUsernameQuery("SELECT email, authorities FROM authorities WHERE email = ?");
 //        userDetailsManager.setUpdateUserSql("UPDATE customers SET enabled = ? WHERE id = ?");
 
         return userDetailsManager;
