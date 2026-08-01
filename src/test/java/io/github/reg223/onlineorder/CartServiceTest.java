@@ -127,9 +127,9 @@ public class CartServiceTest {
         Assertions.assertEquals(cartId, cart.id());
         Assertions.assertEquals(cartEntity.price(), cart.totalPrice());
         Assertions.assertEquals(orderEntities.size(), cart.items().size());
-        Assertions.assertEquals("menu1", cart.items().get(0).itemName());
-        Assertions.assertEquals("desc.1", cart.items().get(0).itemDescription());
-        Assertions.assertEquals("url.1", cart.items().get(0).itemImageUrl());
+        Assertions.assertEquals("menu1", cart.items().getFirst().itemName());
+        Assertions.assertEquals("desc.1", cart.items().getFirst().itemDescription());
+        Assertions.assertEquals("url.1", cart.items().getFirst().itemImageUrl());
         Assertions.assertEquals("menu2", cart.items().get(1).itemName());
 
     }
