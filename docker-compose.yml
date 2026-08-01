@@ -7,7 +7,7 @@ services:
       TZ: UTC
     volumes:
       - onlineorder-pg-local:/var/lib/postgresql/data
-      - ./docker-db/database-init.sql:/docker-entrypoint-initdb.d/database-init.sql
+#      - ./docker-db/database-init.sql:/docker-entrypoint-initdb.d/database-init.sql
     ports:
       - "5432:5432"
 volumes:

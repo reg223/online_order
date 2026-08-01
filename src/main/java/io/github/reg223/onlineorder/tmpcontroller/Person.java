@@ -1,4 +1,4 @@
-package io.github.reg223.onlineorder.controller;
+package io.github.reg223.onlineorder.tmpcontroller;
 
 public record Person (String name,
                       String company,
