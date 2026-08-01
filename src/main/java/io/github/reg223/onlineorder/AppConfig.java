@@ -1,16 +1,24 @@
 package io.github.reg223.onlineorder;
 
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.*;
 
 import javax.sql.DataSource;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 
 
@@ -24,19 +32,42 @@ public class AppConfig {
         userDetailsManager.setCreateAuthoritySql("INSERT INTO authorities (email, authority) VALUES (?, ?)");
         userDetailsManager.setUsersByUsernameQuery("SELECT email, password, enabled FROM customers WHERE email = ?");
         userDetailsManager.setAuthoritiesByUsernameQuery("SELECT email, authorities FROM authorities WHERE email = ?");
-//        userDetailsManager.setUpdateUserSql("UPDATE customers SET enabled = ? WHERE id = ?");
 
         return userDetailsManager;
     }
 
 
-
-//    @Bean
-//    PasswordEncoder()
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests( auth-> auth
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .requestMatchers(HttpMethod.GET,"/","/index.html","/*.json","/*.png").permitAll()
+                .requestMatchers(HttpMethod.GET,"/shops/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/login", "/logout", "/signup").permitAll()
+                .anyRequest().authenticated()
+
+            )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+            )
+            .formLogin(form -> form
+                .successHandler((req,res,auth) -> res.setStatus(HttpStatus.OK.value()))
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+            )
+            .logout(logout -> logout
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+            );
+
+
+
+        return http.build();
     }
 
 }

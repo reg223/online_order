@@ -1,37 +1,47 @@
 package io.github.reg223.onlineorder.controllers;
 
+import io.github.reg223.onlineorder.entities.CustomerEntity;
 import io.github.reg223.onlineorder.models.CartBody;
 import io.github.reg223.onlineorder.models.CartDTO;
 import io.github.reg223.onlineorder.services.CartService;
+import io.github.reg223.onlineorder.services.CustomerService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CartController {
 
     private final CartService cartService;
+    private final CustomerService customerService;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, CustomerService customerService) {
         this.cartService = cartService;
+        this.customerService = customerService;
     }
 
     @GetMapping("/cart")
-    public CartDTO getCart() {
-        return cartService.getCart(1L);
+    public CartDTO getCart(@AuthenticationPrincipal User user) {
+        CustomerEntity customer  = customerService.getCustomerByEmail(user.getUsername());
+        return cartService.getCart(customer.id());
     }
 
     @PostMapping(value = "/cart", params = "action=add")
-    public void addItem(@RequestBody CartBody body) {
-        cartService.addItemToCart(1L, body.menuId());
+    public void addItem(@AuthenticationPrincipal User user, @RequestBody CartBody body) {
+        CustomerEntity customer  = customerService.getCustomerByEmail(user.getUsername());
+        cartService.addItemToCart(customer.id(), body.menuId());
     }
 
     @PostMapping(value = "/cart", params = "action=remove")
-    public void removeItem(@RequestBody(required = false) CartBody body) {
+    public void removeItem(@AuthenticationPrincipal User user, @RequestBody(required = false) CartBody body) {
         if(body == null) return;
-        cartService.removeItemFromCart(1L, body.menuId());
+        CustomerEntity customer  = customerService.getCustomerByEmail(user.getUsername());
+        cartService.removeItemFromCart(customer.id(), body.menuId());
     }
 
     @PostMapping("cart/checkout")
-    public void checkout() {
-        cartService.ClearCart(1L);
+    public void checkout(@AuthenticationPrincipal User user) {
+        CustomerEntity customer  = customerService.getCustomerByEmail(user.getUsername());
+        cartService.ClearCart(customer.id());
     }
 }
