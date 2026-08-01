@@ -6,6 +6,7 @@ import io.github.reg223.onlineorder.models.MenuItemDTO;
 import io.github.reg223.onlineorder.models.ShopDTO;
 import io.github.reg223.onlineorder.repos.MenuRepository;
 import io.github.reg223.onlineorder.repos.ShopRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class ShopService {
         this.menuRepository = menuRepository;
     }
 
+    @Cacheable("shops")
     public List<ShopDTO> getShops() {
         List<ShopEntity> shops = shopRepository.findAll();
         List<MenuEntity> menuEntities = menuRepository.findAll();
