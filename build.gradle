@@ -19,21 +19,32 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security:4.1.0'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-runtimeOnly 'org.postgresql:postgresql:42.6.0'
+    //INFRA:controller
+    implementation('org.springframework.boot:spring-boot-starter-webmvc')
 
+    //INFRA: database
+    implementation('org.springframework.boot:spring-boot-starter-data-jdbc')
+runtimeOnly('org.postgresql:postgresql:42.7.11')
+
+    //SEC
+    implementation('org.springframework.boot:spring-boot-starter-security:4.1.0')
+
+    //TEST:fake user gen
     implementation('com.github.javafaker:javafaker:1.0.2') {
         exclude group: 'org.yaml', module: 'snakeyaml'
     }
-    implementation 'org.yaml:snakeyaml:2.2'
+    implementation('org.yaml:snakeyaml:2.2')
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    //TEST: cache
+    implementation('com.github.ben-manes.caffeine:caffeine:3.+')
+    implementation('org.springframework.boot:spring-boot-starter-cache')
+
+
+
+    testImplementation('org.springframework.boot:spring-boot-starter-webmvc-test')
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-

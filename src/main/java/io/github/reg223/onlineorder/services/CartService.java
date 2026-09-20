@@ -8,6 +8,8 @@ import io.github.reg223.onlineorder.models.OrderItemDTO;
 import io.github.reg223.onlineorder.repos.CartRepository;
 import io.github.reg223.onlineorder.repos.MenuRepository;
 import io.github.reg223.onlineorder.repos.OrderRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,7 @@ public class CartService {
         this.menuRepository = menuRepository;
         this.orderRepository = orderRepository;
     }
-
+    @CacheEvict(cacheNames = "cart", key = "#customerId")
     @Transactional
     public void addItemToCart(long customerId, long menuId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
@@ -52,6 +54,7 @@ public class CartService {
         cartRepository.updateByCartId(cart.id(), cart.price()+menuItem.price());
     }
 
+    @Cacheable("cart")
     public CartDTO getCart(long customerId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
         List<OrderEntity> orders = orderRepository.findAllByCartId(cart.id());
@@ -59,6 +62,7 @@ public class CartService {
         return new CartDTO(cart, orderItemDTOS);
     }
 
+    @CacheEvict(cacheNames = "cart", key = "#customerId")
     @Transactional
     public void removeItemFromCart(long customerId, long menuId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
@@ -77,7 +81,7 @@ public class CartService {
             cartRepository.updateByCartId(cart.id(), cart.price()-menuItem.price());
         }
     }
-
+    @CacheEvict(cacheNames = "cart")
     @Transactional
     public void ClearCart(long customerId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
